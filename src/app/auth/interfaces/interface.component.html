@@ -1,0 +1,117 @@
+<span class="clcikkkk" (click)="openModal()"></span>
+<div id="modal" class="modal modal-fixed-footer" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions">
+
+  
+
+  <div class="modal-content " >
+    <h3>{{device.hostname}}  {{device.loopback_ipv4}}</h3>
+ 
+    <div class="row">
+      <form #mainForm="ngForm" id="main-form" class="input-form" novalidate>
+                      <div class="row">
+                        <div class="input-field col s4">
+
+                        <input id="interface" type="text" class="validate"
+                          #codeVl="ngModel"  
+                          required  [(ngModel)]="interface.interface" name="interface">
+
+                        <label for="interface" [ngClass]="{'active': interface?.interface}">Interface *</label>
+
+                        <div *ngIf="codeVl.invalid && (codeVl.dirty || codeVl.touched)" class="text-danger">   <p *ngIf="codeVl.errors?.pattern ">Invalid interface address </p>                         
+                          <p *ngIf="codeVl.errors?.required">interface is required</p>
+                          
+                        </div>
+                      </div>
+                      <div class="input-field col s4">
+
+                        <input id="loopback" type="text" class="validate"  #mobileVl="ngModel"
+                          pattern='\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}\b' maxlength="8" maxlength="15" required [(ngModel)]="interface.loopback" name="loopback">
+
+                        <label for="loopback" [ngClass]="{'active': interface?.loopback}">Loopback *</label>
+
+                        <div *ngIf="mobileVl.invalid && (mobileVl.dirty || mobileVl.touched)" class="text-danger">
+                          <p *ngIf="mobileVl.errors?.pattern || mobileVl.errors?.maxlength || mobileVl.errors?.minlength">Invalid IP address </p>
+                          <p *ngIf="mobileVl.errors?.required">IP address is required</p>
+                        </div>
+                      </div>
+                    
+                    
+                    <div class="input-field col s4">
+                      <a class="waves-effect waves-light btn teal lighten-2 submit-btn " [ngClass]="{'disabled': !mainForm.valid}"  form="main-form" (click)="addInterface()"> {{(interface?.interface_id=="")?"Add":"Edit"}}</a>
+                      &nbsp;
+                      <a class="waves-effect waves-light btn teal lighten-2 submit-btn "  form="main-form" (click)="clear()">Clear</a>
+
+
+                    </div>
+                    </div>                       
+                        
+                    </form>
+    </div>
+     <div class="sb2-2-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-inn-sp">
+                                <!-- <div class="inn-title">
+                                    <h4>Listing All</h4>                                   
+                                   
+
+                                </div> -->
+                                <div class="tab-inn">
+                                    <div [ngBusy]="busy"></div>
+                                    <div class="table-responsive table-desi">
+
+
+                                         <table class="table table-striped" [mfData]="interface_list" #mf="mfDataTable" [mfRowsOnPage]="5">
+                                                <thead>
+                                                 <tr>
+                                                    <th>Sr.No.</th>
+                                                    <th>Interface</th>
+                                                    <th>Loopback</th>
+                                                    <th>Edit</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr *ngFor="let result of mf.data;let i=index">
+                                                     <td><span class="list-img">{{i+1}}</span></td>
+                                                    <td>{{result.interface}}</td>
+                                                    <td>{{result.interface_ipv4}}</td>                                                    
+                                                    
+                                                    <td>
+                                                        <a (click)="getItem(result)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                    </td>
+                                                    <td>
+                                                        <a (click)="removeInterface(result._id)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                                <tfoot *ngIf="mf.data.length > 0">
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                                                    </td>
+                                                </tr>
+                                                </tfoot>
+                                                <tfoot *ngIf="mf.data.length === 0">
+                                                    <tr>
+                                                      <td colspan="5" class="text-center">
+                                                        <label class="record-label">No record found </label>
+                                                      </td>
+                                                    </tr>
+                                                  </tfoot>
+                                            </table>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <a class="waves-effect waves-green btn-flat"  (click)="closeModal()">Cancel</a>
+     <!-- <a class="waves-effect waves-light btn teal darken-1"   (click)="toggleStatus(interface)">Inactive</a> -->
+  </div>
+</div>

@@ -1,0 +1,122 @@
+ 
+
+    <!--== BODY CONTNAINER ==-->
+    <div >
+        <div class="row">
+          
+            <div class="sb2-2" style="margin-left: 0% !important;width: 100% !important;">
+                <div class="sb2-2-2">
+                  <div class="tab-inn">
+                   <div [ngBusy]="busy"></div>
+                    <form #mainForm="ngForm" id="main-form" class="input-form" novalidate>
+                      <div class="row">
+                        <div class="input-field col s4">
+
+                        <input id="hostname" type="text" class="validate"
+                          #codeVl="ngModel"  
+                          required pattern="^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$" [(ngModel)]="item.hostname" name="hostname">
+
+                        <label for="hostname" [ngClass]="{'active': item?.hostname}">Hostname *</label>
+
+                        <div *ngIf="codeVl.invalid && (codeVl.dirty || codeVl.touched)" class="text-danger">   <p *ngIf="codeVl.errors?.pattern ">Invalid Hostname address </p>                         
+                          <p *ngIf="codeVl.errors?.required">Hostname is required</p>
+                          <p *ngIf="codeVl.errors?.url">Hostname url is required</p>
+                        </div>
+                      </div>
+                      <div class="input-field col s4">
+
+                        <input id="loopback" type="text" class="validate"  #mobileVl="ngModel"
+                          pattern='\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}\b' maxlength="8" maxlength="15" required [(ngModel)]="item.loopback" name="loopback">
+
+                        <label for="loopback" [ngClass]="{'active': item?.loopback}">Loopback *</label>
+
+                        <div *ngIf="mobileVl.invalid && (mobileVl.dirty || mobileVl.touched)" class="text-danger">
+                          <p *ngIf="mobileVl.errors?.pattern || mobileVl.errors?.maxlength || mobileVl.errors?.minlength">Invalid IP address </p>
+                          <p *ngIf="mobileVl.errors?.required">IP address is required</p>
+                        </div>
+                      </div>
+                    
+                    
+                    <div class="input-field col s4">
+                      <a class="waves-effect waves-light btn teal lighten-2 submit-btn " [ngClass]="{'disabled': !mainForm.valid}"  form="main-form" (click)="addDevice()"> {{(item?._id=="")?"Add":"Update"}}</a>
+                      &nbsp;
+                      <a class="waves-effect waves-light btn teal lighten-2 submit-btn "  form="main-form" (click)="clear()">Clear</a>
+
+
+                    </div>
+</div>
+                       
+                        
+                    </form>
+                  </div>
+                </div>
+                <div class="sb2-2-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-inn-sp">
+                                <div class="inn-title">
+                                    <h4>Listing All</h4>                                   
+                                   
+
+                                </div>
+                                <div class="tab-inn">
+                                    <div [ngBusy]="busy"></div>
+                                    <div class="table-responsive table-desi">
+
+                                        <table class="table table-striped" [mfData]="listItem" #mf="mfDataTable" [mfRowsOnPage]="5">
+                                                <thead>
+                                                 <tr>
+                                                    <th>Sr.No.</th>
+                                                    <th>Hostname</th>
+                                                    <th>Loopback</th>
+                                                    <th>Edit</th>
+                                                    <th>Delete</th>
+                                                    <th>View</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr *ngFor="let result of mf.data;let i=index">
+                                                    <td><span class="list-img">{{i+1}}</span></td>
+                                                    <td>{{result.hostname}}</td>
+                                                    <td>{{result.loopback_ipv4}}</td>                                                    
+                                                    
+                                                    <td>
+                                                        <a (click)="getItem(result)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                    </td>
+                                                    <td>
+                                                        <a (click)="removeDevice(result._id)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                    </td>
+                                                    <td>
+                                                        <a [routerLink]="['interface',result._id]"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                                <tfoot *ngIf="mf.data.length > 0">
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                                                    </td>
+                                                </tr>
+                                                </tfoot>
+                                                <tfoot *ngIf="mf.data.length === 0">
+                                                    <tr>
+                                                      <td colspan="6" class="text-center">
+                                                        <label class="record-label">No record found </label>
+                                                      </td>
+                                                    </tr>
+                                                  </tfoot>
+                                            </table>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <router-outlet></router-outlet>
+
+   
